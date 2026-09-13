@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Start</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<style>
+  :root{
+    --win-bg: #232629;
+    --panel-bg: #2a2e32;
+    --field-bg: #1b1e20;
+    --text: #eff0f1;
+    --text-soft: #b3b6b8;
+    --text-faint: #7f8c8d;
+    --border: #43484d;
+    --border-soft: #363a3e;
+    --accent: #3daee9;
+    --accent-soft: rgba(61,174,233,0.16);
+    --radius: 3px;
+  }
+  [data-theme="light"]{
+    --win-bg: #eff0f1;
+    --panel-bg: #fcfcfc;
+    --field-bg: #ffffff;
+    --text: #232629;
+    --text-soft: #4d4d4d;
+    --text-faint: #7f8c8d;
+    --border: #c3c8cc;
+    --border-soft: #d6dade;
+    --accent: #2980b9;
+    --accent-soft: rgba(41,128,185,0.12);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:var(--win-bg);
+    color:var(--text);
+    font-family:'Noto Sans','Cantarell','Oxygen-Sans','Ubuntu','DejaVu Sans',sans-serif;
+    font-size:13px;
+    line-height:1.5;
+  }
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:20px 20px 40px;
+  }
+
+  /* titlebar-style header */
+  .top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 12px;
+    background:var(--panel-bg);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    margin-bottom:20px;
+  }
+  .app-label{
+    font-size:12px;
+    font-weight:600;
+    color:var(--text-soft);
+    letter-spacing:0.2px;
+  }
+  .top-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .clock{
+    font-variant-numeric: tabular-nums;
+    color:var(--text-soft);
+    font-size:12px;
+  }
+  .icon-btn{
+    background:var(--field-bg);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    color:var(--text-soft);
+    cursor:pointer;
+    font-size:12px;
+    font-family:inherit;
+    padding:4px 10px;
+  }
+  .icon-btn:hover{ border-color:var(--accent); color:var(--text); }
+
+  /* groupbox-style panel (Qt QGroupBox look) */
+  .groupbox{
+    position:relative;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:var(--panel-bg);
+    padding:20px 16px 16px;
+    margin-top:14px;
+  }
+  .groupbox .legend{
+    position:absolute;
+    top:-9px;
+    left:12px;
+    background:var(--win-bg);
+    padding:0 6px;
+    font-size:12px;
+    color:var(--text-soft);
+  }
+
+  /* search */
+  .engine-tabs{
+    display:flex;
+    gap:2px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:14px;
+  }
+  .engine-tab{
+    font-family:inherit;
+    font-size:12px;
+    padding:6px 12px;
+    border:none;
+    border-bottom:2px solid transparent;
+    background:none;
+    color:var(--text-faint);
+    cursor:pointer;
+    margin-bottom:-1px;
+  }
+  .engine-tab:hover{ color:var(--text); }
+  .engine-tab.active{
+    color:var(--text);
+    border-bottom-color:var(--accent);
+  }
+  form.search-form{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .search-form input[type="text"]{
+    flex:1;
+    font-family:inherit;
+    font-size:14px;
+    padding:8px 10px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:var(--field-bg);
+    color:var(--text);
+    outline:none;
+  }
+  .search-form input[type="text"]:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 1px var(--accent);
+  }
+  .search-form input[type="text"]::placeholder{ color:var(--text-faint); }
+  .search-submit{
+    border:1px solid var(--border);
+    background:var(--field-bg);
+    color:var(--text-soft);
+    cursor:pointer;
+    font-size:13px;
+    padding:8px 12px;
+    border-radius:var(--radius);
+  }
+  .search-submit:hover{ border-color:var(--accent); color:var(--accent); }
+  .search-hint{
+    margin-top:8px;
+    font-size:11px;
+    color:var(--text-faint);
+  }
+
+  /* section layout */
+  .cols{
+    display:grid;
+    grid-template-columns:1.6fr 1fr;
+    gap:16px;
+  }
+  @media (max-width: 640px){
+    .cols{ grid-template-columns:1fr; }
+  }
+
+  /* shortcuts */
+  .shortcut-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:8px;
+  }
+  @media (max-width: 480px){
+    .shortcut-grid{ grid-template-columns:repeat(3, 1fr); }
+  }
+  .shortcut{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    padding:10px 4px 8px;
+    border-radius:var(--radius);
+    text-decoration:none;
+    color:var(--text);
+    cursor:pointer;
+    background:none;
+    border:1px solid transparent;
+  }
+  .shortcut:hover{
+    background:var(--accent-soft);
+    border-color:var(--border-soft);
+  }
+  .shortcut .fav{
+    width:32px; height:32px;
+    border-radius:var(--radius);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+  }
+  .shortcut .fav svg{ width:18px; height:18px; }
+  .shortcut .label{
+    font-size:11px;
+    color:var(--text-soft);
+    text-align:center;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .shortcut .remove{
+    position:absolute;
+    top:2px; right:2px;
+    width:16px; height:16px;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    background:var(--panel-bg);
+    color:var(--text-faint);
+    font-size:11px;
+    line-height:1;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+  }
+  .shortcut:hover .remove{ display:flex; }
+  .shortcut.add{ color:var(--text-faint); }
+  .shortcut.add .fav{ background:none; border:1px dashed var(--border); color:var(--text-faint); }
+
+  /* news */
+  .news-topics{
+    display:flex;
+    gap:6px;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+  .topic-pill{
+    font-size:11px;
+    padding:4px 9px;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    background:var(--field-bg);
+    color:var(--text-soft);
+    cursor:pointer;
+  }
+  .topic-pill.active{
+    background:var(--accent-soft);
+    color:var(--accent);
+    border-color:var(--accent);
+  }
+  .news-item{
+    padding:10px 0;
+    border-top:1px solid var(--border-soft);
+  }
+  .news-item:first-child{ border-top:none; padding-top:0; }
+  .news-item a{
+    color:var(--text);
+    text-decoration:none;
+    font-size:13px;
+    display:block;
+    margin-bottom:3px;
+  }
+  .news-item a:hover{ color:var(--accent); }
+  .news-meta{
+    font-size:11px;
+    color:var(--text-faint);
+  }
+  .news-empty{
+    font-size:11px;
+    color:var(--text-faint);
+    line-height:1.6;
+  }
+  .news-empty code{
+    background:var(--field-bg);
+    padding:1px 5px;
+    border-radius:var(--radius);
+    border:1px solid var(--border-soft);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <span class="app-label">Start</span>
+    <div class="top-right">
+      <span class="clock" id="clock">--:--</span>
+      <button class="icon-btn" id="theme-toggle">Light theme</button>
+    </div>
+  </div>
+
+  <div class="groupbox">
+    <span class="legend">Search</span>
+    <div class="engine-tabs" id="engines"></div>
+    <form class="search-form" id="search-form">
+      <input type="text" id="search-input" placeholder="Search or enter a URL" autocomplete="off" />
+      <button type="submit" class="search-submit">Go</button>
+    </form>
+    <div class="search-hint">A full address goes straight there instead of searching.</div>
+  </div>
+
+  <div class="cols">
+    <div class="groupbox">
+      <span class="legend">Shortcuts</span>
+      <div class="shortcut-grid" id="shortcut-grid"></div>
+    </div>
+
+    <div class="groupbox">
+      <span class="legend">News</span>
+      <div class="news-topics" id="news-topics"></div>
+      <div id="news-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
